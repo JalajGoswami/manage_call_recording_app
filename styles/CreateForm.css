@@ -1,0 +1,18 @@
+.create-form {
+    width: 90%;
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: 100%;
+    margin-top: 1rem;
+}
+
+.action-btns button {
+    margin-right: 0.5rem;
+}
+
+@media (width > 800px) {
+    .create-form {
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 4rem;
+    }
+}
