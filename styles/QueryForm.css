@@ -1,4 +1,4 @@
-.create-form {
+.query-form {
     width: 90%;
     max-width: 1000px;
     display: grid;
@@ -11,8 +11,12 @@
 }
 
 @media (width > 800px) {
-    .create-form {
+    .query-form {
         grid-template-columns: 1fr 1fr;
         grid-column-gap: 4rem;
+    }
+
+    .action-btns {
+        grid-column: 1/span 2;
     }
 }

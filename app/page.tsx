@@ -1,13 +1,16 @@
 'use client'
 import Header from '@/components/header'
-import styles from './page.module.css'
-import CreateForm from '@/components/CreateForm'
+import QueryForm from '@/components/QueryForm'
+import RecordingsTable from '@/components/RecordingsTable'
+import SaveAsForm from '@/components/SaveAsForm'
 
 export default function Home() {
   return (
-      <main className={styles.main}>
+    <main>
       <Header />
-      <CreateForm />
-      </main>
+      <QueryForm />
+      <SaveAsForm />
+      <RecordingsTable />
+    </main>
   )
 }

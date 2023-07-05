@@ -1,61 +1,63 @@
 import React from 'react'
 import Row from 'antd/es/grid/row'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, Select, SelectProps } from 'antd'
 import DatePicker from 'antd/es/date-picker'
-import '@/styles/CreateForm.css'
+import '@/styles/QueryForm.css'
 
-export default function CreateForm() {
+export default function QueryForm() {
+    const options: SelectProps['options'] = [{ label: 'First', value: 1 }]
+
     return (
         <Row justify='center'>
             <Form
-                name="basic"
+                name="query-form"
                 labelCol={{ span: 10 }}
                 labelAlign='left'
                 initialValues={{ remember: true }}
-                className='create-form'
+                className='query-form'
             >
                 <Form.Item
                     label="Call Date from"
                     name="startDate"
-                    rules={[{ required: true, message: 'Please input StartDate' }]}
                 >
                     <DatePicker style={{ width: '100%' }} />
                 </Form.Item>
-
                 <Form.Item
                     label="Call Date to"
                     name="endDate"
-                    rules={[{ required: true, message: 'Please input EndDate' }]}
                 >
                     <DatePicker style={{ width: '100%' }} />
                 </Form.Item>
                 <Form.Item
                     label="Phone Number"
                     name="phoneNumber"
-                    rules={[{ required: true, message: 'Please input Phone Number' }]}
                 >
-                    <Input type='tel' />
+                    <Input type='tel' placeholder='Type number' />
                 </Form.Item>
                 <Form.Item
                     label="Volunteer Number"
                     name="volunteerNumber"
-                    rules={[{ required: true, message: 'Please input Volunteer Number' }]}
                 >
-                    <Input />
+                    <Input placeholder='Type number' />
                 </Form.Item>
                 <Form.Item
                     label="Campaign Id"
                     name="campaignId"
-                    rules={[{ required: true, message: 'Please input Campaign Id' }]}
                 >
-                    <Input />
+                    <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: '100%' }}
+                        placeholder="Please select"
+                        onChange={value => console.log(value)}
+                        options={options}
+                    />
                 </Form.Item>
                 <Form.Item
                     label="Agent Id"
                     name="agentId"
-                    rules={[{ required: true, message: 'Please input Agent Id' }]}
                 >
-                    <Input />
+                    <Input placeholder='Type id' />
                 </Form.Item>
                 <Form.Item className='action-btns'>
                     <Button type="primary" htmlType="submit">

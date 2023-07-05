@@ -1,0 +1,24 @@
+.save-as-form {
+    width: 90%;
+    max-width: 1000px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.recording-btns {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.recordings-table {
+    width: 96%;
+    max-width: 1300px;
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+.recordings-table>div {
+    min-width: 680px;
+}
