@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model Campaign {
+  id        Int         @id @default(sequence())
+  name      String
+  Recording Recording[]
+}
+
+model Recording {
+  id              Int      @id @default(sequence())
+  callTime        DateTime
+  phoneNumber     String
+  campaign        Campaign @relation(fields: [campaignId], references: [id])
+  campaignId      Int
+  agentId         Int
+  volunteerNumber Int
+  recording       String
+}

@@ -1,8 +1,8 @@
 import '../public/antd.min.css'
 import './globals.css'
-import { Montserrat } from 'next/font/google'
+import { Montserrat, Inter, Open_Sans, Roboto } from 'next/font/google'
 
-const inter = Montserrat({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'Manage Call Recordings',

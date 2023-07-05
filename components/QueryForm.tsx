@@ -61,7 +61,7 @@ export default function QueryForm() {
                 </Form.Item>
                 <Form.Item className='action-btns'>
                     <Button type="primary" htmlType="submit">
-                        Save
+                        Search
                     </Button>
                     <Button htmlType="reset">
                         Reset
