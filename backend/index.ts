@@ -1,6 +1,7 @@
 import express, { Express } from 'express'
 import db from '../prisma/db'
 import path from 'path'
+import { filtersSchema, handleError } from './utils'
 
 const PORT = 5000
 
@@ -13,7 +14,6 @@ async function main() {
     app.use(express.urlencoded({ extended: true }))
 
     // static file serving
-    console.log(path.join(__dirname, '../out'))
     app.use('/', express.static(path.join(__dirname, '../out')))
 
     // routes
@@ -22,7 +22,23 @@ async function main() {
     })
 
     app.get('/api/recording', async (req, res) => {
-        return res.json({})
+        try {
+            const { campaignId, startDate, endDate, ...queryParams
+            } = filtersSchema.validateSync(req.query)
+
+            const campaignIds = campaignId?.split(',').map(Number)
+
+            const recordings = await db.recording.findMany({
+                where: {
+                    ...queryParams,
+                    callTime: { gte: startDate, lte: endDate },
+                    campaignId: campaignIds ? { in: campaignIds } : undefined
+                }
+            })
+
+            return res.json(recordings)
+        }
+        catch (err) { handleError(res, err) }
     })
 
     app.listen(PORT, () =>
