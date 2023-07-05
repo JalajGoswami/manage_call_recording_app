@@ -11,7 +11,7 @@ export const filtersSchema = Yup.object({
 }).noUnknown()
 
 
-export function getError(err: unknown, withStack = false) {
+export function getError(err: unknown) {
     let error = err as any
 
     if (error?.meta?.cause)
@@ -19,10 +19,6 @@ export function getError(err: unknown, withStack = false) {
 
     if (error?.message) {
         let message = error.message.trim()
-        const lines = message.trim().split('\n')
-        if (!withStack && lines.length > 1)
-            return lines[lines.length - 1]
-
         return message
     }
 

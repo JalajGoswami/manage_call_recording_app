@@ -18,10 +18,12 @@ async function main() {
 
     // routes
     app.get('/api/campaign', async (req, res) => {
+        res.setHeader('Access-Control-Allow-Origin', '*')
         return res.json(await db.campaign.findMany())
     })
 
     app.get('/api/recording', async (req, res) => {
+        res.setHeader('Access-Control-Allow-Origin', '*')
         try {
             const { campaignId, startDate, endDate, ...queryParams
             } = filtersSchema.validateSync(req.query)

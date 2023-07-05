@@ -1,80 +1,113 @@
-import React from 'react'
+import React, { useMemo, useState, useRef } from 'react'
 import { Button, Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { BsPlayCircleFill, BsPauseCircleFill } from 'react-icons/bs'
 import { MdDownloadForOffline } from 'react-icons/md'
 import '@/styles/Recordings.css'
+import { Campaign, Recording } from '@prisma/client'
+import moment from 'moment'
 
-interface DataType {
-    id: number;
-    callTime: string;
-    phoneNumber: string;
-    campaignId: number;
-    agentId: number;
-    volunteerNumber: number;
-    recording: string;
+
+type Recordings = Recording[] | null | undefined
+type PropTypes = {
+    recordings: Recordings;
+    campaigns: Campaign[];
 }
 
-const columns: ColumnsType<DataType> = [
-    {
-        title: 'Call Datetime',
-        dataIndex: 'callTime',
-        key: 'callTime'
-    },
-    {
-        title: 'Phone Number',
-        dataIndex: 'phoneNumber',
-        key: 'phoneNumber',
-    },
-    {
-        title: 'Campaign Id',
-        dataIndex: 'campaignId',
-        key: 'campaignId',
-    },
-    {
-        title: 'Agent Id',
-        dataIndex: 'agentId',
-        key: 'agentId',
-    },
-    {
-        title: 'Volunteer Number',
-        dataIndex: 'volunteerNumber',
-        key: 'volunteerNumber',
-    },
-    {
-        title: 'Action',
-        key: 'action',
-        render: (_i, record) => (
-            <Space size="small">
-                <Button type='dashed' shape='round' className='recording-btns'>
-                    <BsPlayCircleFill /> Play
-                </Button>
-                {/* <Button type='dashed' shape='round' className='recording-btns'>
-                    <BsPauseCircleFill /> Pause
-                </Button> */}
-                <Button type='dashed' shape='round' className='recording-btns'>
-                    <MdDownloadForOffline size={16} /> Save
-                </Button>
-            </Space>
-        ),
-    },
-];
+export default function RecordingsTable({ recordings, campaigns }: PropTypes) {
+    const [currentPlaying, setCurrentPlaying] = useState<number | null>(null)
+    const [paused, setPaused] = useState(false)
+    const audioPlayer = useRef<HTMLAudioElement>()
 
-const data: DataType[] = [
-    {
-        id: 1,
-        callTime: '11-06-2023',
-        phoneNumber: '7579654824',
-        campaignId: 808,
-        agentId: 1001,
-        volunteerNumber: 32,
-        recording: 'url'
+    function handlePlay(record: Recording) {
+        if (!audioPlayer.current) {
+            audioPlayer.current = new Audio(record.recording)
+            audioPlayer.current.onended = function(){
+                setCurrentPlaying(null)
+            }
+        }
+
+        if (currentPlaying != record.id) {
+            audioPlayer.current.pause()
+            audioPlayer.current.src = record.recording
+            setCurrentPlaying(record.id)
+        }
+
+        setPaused(false)
+        audioPlayer.current.play()
     }
-]
 
-export default function RecordingsTable() {
+    function handlePause() {
+        audioPlayer.current?.pause()
+        setPaused(true)
+    }
+
+    const columns: ColumnsType<Recording> = useMemo(() => [
+        {
+            title: 'Call Datetime',
+            dataIndex: 'callTime',
+            key: 'callTime',
+            render: date => moment(date).format('DD MMM YYYY hh:mm a')
+        },
+        {
+            title: 'Phone Number',
+            dataIndex: 'phoneNumber',
+            key: 'phoneNumber',
+        },
+        {
+            title: 'Campaign Id',
+            dataIndex: 'campaignId',
+            key: 'campaignId',
+        },
+        {
+            title: 'Campaign Name',
+            dataIndex: 'campaignId',
+            render: id => campaigns.find(c => c.id === id)?.name
+        },
+        {
+            title: 'Agent Id',
+            dataIndex: 'agentId',
+            key: 'agentId',
+        },
+        {
+            title: 'Volunteer Number',
+            dataIndex: 'volunteerNumber',
+            key: 'volunteerNumber',
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <Space size="small">
+                    {(currentPlaying !== record.id || paused) ?
+                        <Button type='dashed' shape='round'
+                            className='recording-btns play-btn'
+                            onClick={() => handlePlay(record)}
+                        >
+                            <BsPlayCircleFill /> Play
+                        </Button>
+                        :
+                        <Button type='dashed' shape='round'
+                            className='recording-btns'
+                            onClick={handlePause}
+                        >
+                            <BsPauseCircleFill /> Pause
+                        </Button>
+                    }
+                    <Button href={record.recording} download type='dashed'
+                        shape='round' className='recording-btns'
+                    >
+                        <MdDownloadForOffline size={16} /> Save
+                    </Button>
+                </Space>
+            ),
+        },
+    ], [campaigns, currentPlaying, paused]);
+
+    if (!recordings) return <></>;
+
     return (
-        <Table columns={columns} dataSource={data}
+        <Table columns={columns} dataSource={recordings}
             bordered className='recordings-table'
         />
     )

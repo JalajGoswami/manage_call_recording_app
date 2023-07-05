@@ -1,20 +1,57 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import Row from 'antd/es/grid/row'
-import { Button, Form, Input, Select, SelectProps } from 'antd'
+import { Button, Form, Input, Select, SelectProps, message } from 'antd'
 import DatePicker from 'antd/es/date-picker'
 import '@/styles/QueryForm.css'
+import { Campaign, Recording } from '@prisma/client'
+import axios from 'axios'
 
-export default function QueryForm() {
-    const options: SelectProps['options'] = [{ label: 'First', value: 1 }]
+type Recordings = Recording[] | null | undefined
+type PropTypes = {
+    campaigns: Campaign[];
+    setRecordings: Dispatch<SetStateAction<Recordings>>;
+}
+
+export default function QueryForm(
+    { campaigns, setRecordings }: PropTypes
+) {
+    const [campaignIds, setCampaignIds] = useState<number[]>([])
+    const [messageApi, contextHolder] = message.useMessage()
+
+    const options: SelectProps['options'] = campaigns.map(c =>
+        ({ label: c.name, value: c.id })
+    )
+
+    function onSubmit(values: Record<string, any>) {
+        values.startDate = values.startDate && values.startDate.$d.toISOString()
+        values.endDate = values.endDate && values.endDate.$d.toISOString()
+        values.campaignId = campaignIds.join(',')
+
+        Object.keys(values).forEach(k => !values[k] && delete values[k])
+        if (Object.keys(values).length === 0)
+            messageApi.open({
+                type: 'error',
+                content: 'Atleast one field is required to search.'
+            })
+
+        axios.get('http://localhost:5000/api/recording', { params: values })
+            .then(res => setRecordings(res.data))
+            .catch(err => messageApi.open({
+                type: 'error',
+                content: err.response.data.error ?? err.message
+            }))
+    }
 
     return (
         <Row justify='center'>
+            {contextHolder}
             <Form
                 name="query-form"
                 labelCol={{ span: 10 }}
                 labelAlign='left'
                 initialValues={{ remember: true }}
                 className='query-form'
+                onFinish={onSubmit}
             >
                 <Form.Item
                     label="Call Date from"
@@ -49,7 +86,7 @@ export default function QueryForm() {
                         allowClear
                         style={{ width: '100%' }}
                         placeholder="Please select"
-                        onChange={value => console.log(value)}
+                        onChange={setCampaignIds}
                         options={options}
                     />
                 </Form.Item>

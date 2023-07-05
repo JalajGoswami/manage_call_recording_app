@@ -11,6 +11,9 @@
     align-items: center;
     gap: 0.25rem;
 }
+.play-btn {
+    min-width: 87px;
+}
 
 .recordings-table {
     width: 96%;
