@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef } from 'react'
+import React, { useMemo, useState, useRef, Dispatch, SetStateAction } from 'react'
 import { Button, Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { BsPlayCircleFill, BsPauseCircleFill } from 'react-icons/bs'
@@ -12,9 +12,12 @@ type Recordings = Recording[] | null | undefined
 type PropTypes = {
     recordings: Recordings;
     campaigns: Campaign[];
+    setSelected: Dispatch<SetStateAction<Recording | undefined>>;
 }
 
-export default function RecordingsTable({ recordings, campaigns }: PropTypes) {
+export default function RecordingsTable(
+    { recordings, campaigns, setSelected }: PropTypes
+) {
     const [currentPlaying, setCurrentPlaying] = useState<number | null>(null)
     const [paused, setPaused] = useState(false)
     const audioPlayer = useRef<HTMLAudioElement>()
@@ -22,7 +25,7 @@ export default function RecordingsTable({ recordings, campaigns }: PropTypes) {
     function handlePlay(record: Recording) {
         if (!audioPlayer.current) {
             audioPlayer.current = new Audio(record.recording)
-            audioPlayer.current.onended = function(){
+            audioPlayer.current.onended = function () {
                 setCurrentPlaying(null)
             }
         }
@@ -94,8 +97,8 @@ export default function RecordingsTable({ recordings, campaigns }: PropTypes) {
                             <BsPauseCircleFill /> Pause
                         </Button>
                     }
-                    <Button href={record.recording} download type='dashed'
-                        shape='round' className='recording-btns'
+                    <Button href={record.recording} target='_blank' download
+                        type='dashed' shape='round' className='recording-btns'
                     >
                         <MdDownloadForOffline size={16} /> Save
                     </Button>
@@ -108,7 +111,13 @@ export default function RecordingsTable({ recordings, campaigns }: PropTypes) {
 
     return (
         <Table columns={columns} dataSource={recordings}
-            bordered className='recordings-table'
+            bordered className='recordings-table' rowKey='id'
+            rowSelection={{
+                type: 'radio',
+                onChange: (ids) => setSelected(
+                    recordings.find(r => r.id === ids[0])!
+                )
+            }}
         />
     )
 }

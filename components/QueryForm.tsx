@@ -28,11 +28,13 @@ export default function QueryForm(
         values.campaignId = campaignIds.join(',')
 
         Object.keys(values).forEach(k => !values[k] && delete values[k])
-        if (Object.keys(values).length === 0)
+        if (Object.keys(values).length === 0) {
             messageApi.open({
                 type: 'error',
                 content: 'Atleast one field is required to search.'
             })
+            return;
+        }
 
         axios.get('http://localhost:5000/api/recording', { params: values })
             .then(res => setRecordings(res.data))

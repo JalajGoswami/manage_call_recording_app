@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 export default function Home() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [recordings, setRecordings] = useState<Recording[] | null>()
+  const [selected, setSelected] = useState<Recording>()
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/campaign')
@@ -22,10 +23,13 @@ export default function Home() {
         campaigns={campaigns}
         setRecordings={setRecordings}
       />
-      <SaveAsForm />
+      <SaveAsForm
+        recording={selected}
+      />
       <RecordingsTable
         campaigns={campaigns}
         recordings={recordings}
+        setSelected={setSelected}
       />
     </main>
   )

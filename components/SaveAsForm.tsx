@@ -1,14 +1,40 @@
 import React from 'react'
-import { Button, Form, Input, Row } from 'antd'
+import { Button, Form, Input, Row, message } from 'antd'
 import '@/styles/Recordings.css'
+import { Recording } from '@prisma/client';
 
-export default function SaveAsForm() {
+type PropTypes = {
+    recording: Recording | undefined;
+}
+
+export default function SaveAsForm({ recording }: PropTypes) {
+    const [messageApi, contextHolder] = message.useMessage()
+
+    function saveAs({ name }: { name: string; }) {
+        if (!recording) {
+            messageApi.open({
+                type: 'error',
+                content: 'Select a recording from table.'
+            })
+            return;
+        }
+        const link = document.createElement("a")
+        document.body.appendChild(link)
+        link.download = name + '.' + recording.recording.split('.').pop()
+        link.target = '_blank'
+        link.href = recording.recording
+        link.click()
+        document.body.removeChild(link)
+    }
+
     return (
         <Row justify='center'>
+            {contextHolder}
             <Form
                 name="save-as-form"
                 initialValues={{ remember: true }}
                 className='save-as-form'
+                onFinish={saveAs}
             >
                 <Form.Item
                     label="File Name"
