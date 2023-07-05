@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useRef, Dispatch, SetStateAction } from 'react'
-import { Button, Space, Table } from 'antd'
+import { Space, Table } from 'antd'
+import Button from 'antd/es/button'
 import type { ColumnsType } from 'antd/es/table'
 import { BsPlayCircleFill, BsPauseCircleFill } from 'react-icons/bs'
 import { MdDownloadForOffline } from 'react-icons/md'

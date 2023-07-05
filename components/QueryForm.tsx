@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import Row from 'antd/es/grid/row'
-import { Button, Form, Input, Select, SelectProps, message } from 'antd'
+import { Form, Input, Select, SelectProps, message } from 'antd'
+import Button from 'antd/es/button'
 import DatePicker from 'antd/es/date-picker'
 import '@/styles/QueryForm.css'
 import { Campaign, Recording } from '@prisma/client'

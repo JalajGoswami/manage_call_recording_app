@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, Form, Input, Row, message } from 'antd'
+import { Form, Input, Row, message } from 'antd'
+import Button from 'antd/es/button'
 import '@/styles/Recordings.css'
 import { Recording } from '@prisma/client';
 
