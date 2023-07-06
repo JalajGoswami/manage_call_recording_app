@@ -3,7 +3,7 @@ import db from '../prisma/db'
 import path from 'path'
 import { filtersSchema, handleError } from './utils'
 
-const PORT = 5000
+const PORT = process.env.PORT ?? 5000
 
 const app: Express = express()
 
