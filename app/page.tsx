@@ -13,7 +13,7 @@ export default function Home() {
   const [selected, setSelected] = useState<Recording>()
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/campaign')
+    axios.get('/api/campaign')
       .then(res => setCampaigns(res.data))
   }, [])
   return (

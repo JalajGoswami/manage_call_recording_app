@@ -37,7 +37,7 @@ export default function QueryForm(
             return;
         }
 
-        axios.get('http://localhost:5000/api/recording', { params: values })
+        axios.get('/api/recording', { params: values })
             .then(res => setRecordings(res.data))
             .catch(err => messageApi.open({
                 type: 'error',
