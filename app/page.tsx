@@ -4,6 +4,7 @@ import QueryForm from '@/components/QueryForm'
 import RecordingsTable from '@/components/RecordingsTable'
 import SaveAsForm from '@/components/SaveAsForm'
 import { Campaign, Recording } from '@prisma/client'
+import Spin from 'antd/es/spin'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
@@ -16,6 +17,7 @@ export default function Home() {
     axios.get('/api/campaign')
       .then(res => setCampaigns(res.data))
   }, [])
+
   return (
     <main>
       <Header />
@@ -26,6 +28,9 @@ export default function Home() {
       <SaveAsForm
         recording={selected}
       />
+      {recordings === null &&
+        <Spin size='large' />
+      }
       <RecordingsTable
         campaigns={campaigns}
         recordings={recordings}

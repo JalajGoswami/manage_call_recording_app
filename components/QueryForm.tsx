@@ -23,7 +23,7 @@ export default function QueryForm(
         ({ label: c.name, value: c.id })
     )
 
-    function onSubmit(values: Record<string, any>) {
+    async function onSubmit(values: Record<string, any>) {
         values.startDate = values.startDate && values.startDate.$d.toISOString()
         values.endDate = values.endDate && values.endDate.$d.toISOString()
         values.campaignId = campaignIds.join(',')
@@ -37,12 +37,19 @@ export default function QueryForm(
             return;
         }
 
-        axios.get('/api/recording', { params: values })
-            .then(res => setRecordings(res.data))
-            .catch(err => messageApi.open({
+        setRecordings(null)
+        try {
+            const res = await axios.get('/api/recording', { params: values })
+            setRecordings(res.data)
+        }
+        catch (error) {
+            let err = error as any
+            messageApi.open({
                 type: 'error',
-                content: err.response.data.error ?? err.message
-            }))
+                content: err.response?.data.error ?? err.message
+            })
+            setRecordings(undefined)
+        }
     }
 
     return (
@@ -103,7 +110,9 @@ export default function QueryForm(
                     <Button type="primary" htmlType="submit">
                         Search
                     </Button>
-                    <Button htmlType="reset">
+                    <Button htmlType="reset"
+                        onClick={() => setCampaignIds([])}
+                    >
                         Reset
                     </Button>
                 </Form.Item>
