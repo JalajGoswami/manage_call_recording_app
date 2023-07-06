@@ -52,7 +52,8 @@ export default function RecordingsTable(
             title: 'Call Datetime',
             dataIndex: 'callTime',
             key: 'callTime',
-            render: date => moment(date).format('DD MMM YYYY hh:mm a')
+            render: date => moment(date).format('DD MMM YYYY hh:mm a'),
+            sorter: (a, b) => moment(a.callTime).valueOf() - moment(b.callTime).valueOf()
         },
         {
             title: 'Phone Number',
@@ -67,7 +68,9 @@ export default function RecordingsTable(
         {
             title: 'Campaign Name',
             dataIndex: 'campaignId',
-            render: id => campaigns.find(c => c.id === id)?.name
+            render: id => campaigns.find(c => c.id === id)?.name,
+            filters: campaigns.map(c => ({ text: c.name, value: c.id })),
+            onFilter: (value, record) => record.campaignId === value
         },
         {
             title: 'Agent Id',
