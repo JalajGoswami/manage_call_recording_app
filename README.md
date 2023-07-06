@@ -2,7 +2,6 @@ This is an assignment project done by Jalaj Goswami.
 
 ## Getting Started Locally
 
-First, run the development server:
 
 ```bash
 # do these in sequence

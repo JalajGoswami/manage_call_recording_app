@@ -16,6 +16,7 @@ export default function Home() {
   useEffect(() => {
     axios.get('/api/campaign')
       .then(res => setCampaigns(res.data))
+      .catch(console.error)
   }, [])
 
   return (
@@ -29,7 +30,9 @@ export default function Home() {
         recording={selected}
       />
       {recordings === null &&
-        <Spin size='large' />
+        <Spin size='large'
+          style={{ display: 'grid', placeItems: 'center' }}
+        />
       }
       <RecordingsTable
         campaigns={campaigns}
