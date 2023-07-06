@@ -14,7 +14,7 @@ async function main() {
     app.use(express.urlencoded({ extended: true }))
 
     // static file serving
-    app.use('/', express.static(path.join(__dirname, '../out')))
+    app.use('/', express.static(path.join(__dirname, '../')))
 
     // routes
     app.get('/api/campaign', async (req, res) => {

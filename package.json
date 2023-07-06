@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start_next": "next start",
-    "start": "node build/backend/index.js",
+    "start": "node out/backend/index.js",
     "lint": "next lint",
     "predev": "ts-node --project ./tsconfig.node.json ./scripts/genAntdCss.tsx",
     "prebuild": "cross-env NODE_ENV=production ts-node --project ./tsconfig.node.json ./scripts/genAntdCss.tsx",
